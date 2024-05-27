@@ -1,4 +1,5 @@
 import {
+  createUserDocumentFromAuth,
   signInWithGooglePopup
 } from './utils/firebase.app'
 
@@ -6,8 +7,8 @@ import './App.css';
 
 function App() {
   const logGoogleUser =  async () => {
-    const res = await signInWithGooglePopup()
-    console.log(res)
+    const {user} = await signInWithGooglePopup()
+    createUserDocumentFromAuth(user)
   }
 
   return (
