@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdUOfWZmMXvQajLEDzzf0m2aN6QeoNkxQ",
@@ -11,5 +12,16 @@ const firebaseConfig = {
   measurementId: "G-6KR4ND3KYZ"
 };
 
+// initializeApp must be called to initialize firebase API
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
+
+const provider = new GoogleAuthProvider()
+
+// Force users to choose a google account
+provider.setCustomParameters({
+  prompt: 'select_account'
+})
+
+export const auth = getAuth()
+export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
