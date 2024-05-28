@@ -10,19 +10,27 @@ import { getRedirectResult } from 'firebase/auth';
 
 function SignInForm() {
   const onGooglePopupUserClick =  async () => {
+    // signin with google account and get user information
     const {user} = await signInWithGooglePopup()
+
+    // user information will be stored in our firestore db
     createUserDocumentFromAuth(user)
   }
 
   const onGoogleRedirectUserClick =  async () => {
+    // signin with google account
     await signInWithGoogleRedirect()
   }
 
   useEffect(() => {
     const onCreateUser = async () => {
+      // get user information from result of signInWithGoogleRedirect() function
+      // because page reload after execute signInWithGoogleRedirect() function
+      // we need use getRedirectResult() and useEffect() function
       const res = await getRedirectResult(auth)
       
       if (res) {
+        // user information will be stored in our firestore db
         createUserDocumentFromAuth(res.user)
       }
     }
