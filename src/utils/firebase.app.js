@@ -54,6 +54,7 @@ export const createUserDocumentFromAuth = async (
     const createdAt = new Date()
 
     try {
+      // userDocRef used to reference our data to firebase auth
       await setDoc(userDocRef, {
         displayName,
         email,
