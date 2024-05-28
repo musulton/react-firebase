@@ -11,7 +11,10 @@ import { getRedirectResult } from 'firebase/auth';
 
 function App() {
   const onGooglePopupUserClick =  async () => {
+    // signin with google account and get user information
     const {user} = await signInWithGooglePopup()
+
+    // user information will be stored in our firestore db
     createUserDocumentFromAuth(user)
   }
 
