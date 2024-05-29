@@ -55,7 +55,7 @@ function SignUpForm() {
 
   return (
     <>
-      <h1>Sign up with your email and password</h1>
+      <h1>Sign Up with email and password</h1>
       <form onSubmit={onSubmitHandler}>
         <label>Display Name</label>
         <input

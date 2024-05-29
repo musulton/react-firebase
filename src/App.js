@@ -1,13 +1,15 @@
 import './App.css';
-import SignInForm from './components/SignInForm';
+import GoogleSignInForm from './components/GoogleSignInForm';
 import SignUpForm from './components/SignUpForm';
+import SignInForm from './components/SignInForm';
 
 function App() {
 
   return (
     <div className="App">
-      <SignInForm />
+      <GoogleSignInForm />
       <SignUpForm />
+      <SignInForm />
     </div>
   );
 }

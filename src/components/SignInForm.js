@@ -1,53 +1,73 @@
-import {
-  auth,
-  createUserDocumentFromAuth,
-  signInWithGooglePopup,
-  signInWithGoogleRedirect
-} from '../utils/firebase.app'
+import { useState } from "react"
+import { signinUserAuthWithEmailAndPassword } from "../utils/firebase.app"
 
-import { useEffect } from 'react';
-import { getRedirectResult } from 'firebase/auth';
+const defaultFormFields = {
+  email: '',
+  password: '',
+}
 
 function SignInForm() {
-  const onGooglePopupUserClick =  async () => {
-    // signin with google account and get user information
-    const {user} = await signInWithGooglePopup()
+  const [formFields, setFormFields] = useState(defaultFormFields)
+  const { email, password } = formFields
 
-    // user information will be stored in our firestore db
-    createUserDocumentFromAuth(user)
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target
+
+    setFormFields({
+      ...formFields,
+      [name]: value
+    })
   }
 
-  const onGoogleRedirectUserClick =  async () => {
-    // signin with google account
-    await signInWithGoogleRedirect()
+  const onResetField = () => {
+    setFormFields(defaultFormFields)
   }
 
-  useEffect(() => {
-    const onCreateUser = async () => {
-      // get user information from result of signInWithGoogleRedirect() function
-      // because page reload after execute signInWithGoogleRedirect() function
-      // we need use getRedirectResult() and useEffect() function
-      const res = await getRedirectResult(auth)
-      
-      if (res) {
-        // user information will be stored in our firestore db
-        createUserDocumentFromAuth(res.user)
+  const onSubmitHandler = async (event) => {
+    event.preventDefault()
+
+    try {
+      // sign user auth and get user information data from response
+      const response = await signinUserAuthWithEmailAndPassword(email, password)
+      console.log(response)
+      onResetField()
+    } catch (err) {
+      // each error code describes error message from firebase auth
+      if (err.code === 'auth/wrong-password') {
+        alert('incorrect password for email')
+      } else if (err.code === 'auth/user-not-found') {
+        alert('no user associated with this email')
+      } else {
+        console.error(err)
       }
     }
-    onCreateUser()
-  }, [])
+  }
 
   return (
     <>
-      <h1>Sign In Page</h1>
-      <button onClick={onGooglePopupUserClick}>
-        Sign In with Google PopUp
-      </button>
-      <button onClick={onGoogleRedirectUserClick}>
-        Sign In with Google Redirect
-      </button>
+      <h1>Sign In with email and password</h1>
+      <form onSubmit={onSubmitHandler}>
+        <label>Email</label>
+        <input
+          type="email"
+          required
+          onChange={onChangeHandler}
+          name="email"
+          value={email}
+        />
+
+        <label>Password</label>
+        <input
+          type="password"
+          required
+          onChange={onChangeHandler}
+          name="password"
+          value={password}
+        />
+        <button type="submit">Sign In</button>
+      </form>
     </>
-  );
+  )
 }
 
-export default SignInForm;
+export default SignInForm
